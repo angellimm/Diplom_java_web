@@ -1,5 +1,8 @@
 package com.diary.demo.Service;
 
+
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +19,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class JwtService {
 
-    public static final String SECRET = "745C372F54537B888C02D7B5AFE65E69B9B2EC0B1F11B879D38C1711538D7674C83B5C3500EAEAAC94AD6F5EFF626EE2DF047A567DDCC22AAB9DD4326497D8A2";
-
+    private static final String SECRET = "638CBE3A90E0303BF3808F40F95A7F02A24B4B5D029C954CF553F79E9EF1DC0384BE681C249F1223F6B55AA21DC070914834CA22C8DD98E14A872CA010091ACC";
     private static final long VALIDITY = TimeUnit.MINUTES.toMillis(30);
 
     public String generateToken(UserDetails userDetails) {
         Map<String, String> claims = new HashMap<>();
         claims.put("iss", "https://secure.emotiondiary.com");
-//        claims.put("name", "Oleg");
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
@@ -38,22 +39,21 @@ public class JwtService {
         return Keys.hmacShaKeyFor(decodedKey);
     }
 
-//    public String extractUsername(String jwt) {
-//        Claims claims = getClaims(jwt);
-//        return claims.getSubject();
-//    }
+    public String extractUsername(String jwt) {
+        Claims claims = getClaims(jwt);
+        return claims.getSubject();
+    }
 
-//    private Claims getClaims(String jwt) {
-//        return Jwts.parser()
-//                .verifyWith(generateKey())
-//                .build()
-//                .parseSignedClaims(jwt)
-//                .getPayload();
-//    }
+    private Claims getClaims(String jwt) {
+        return Jwts.parser()
+                .verifyWith(generateKey())
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
+    }
 
-//    public boolean isTokenValid(String jwt) {
-//        Claims claims = getClaims(jwt);
-//        return claims.getExpiration().after(Date.from(Instant.now()));
-//    }
-
+    public boolean isTokenValid(String jwt) {
+        Claims claims = getClaims(jwt);
+        return claims.getExpiration().after(Date.from(Instant.now()));
+    }
 }
