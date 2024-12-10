@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,37 +44,23 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
-                 registry.requestMatchers("/home", "/register/**", "/authenticate").permitAll();
+                 registry.requestMatchers("/home", "/register", "/authenticate").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/user/**").hasRole("USER");
                     registry.anyRequest().authenticated();
                 })
-
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer
                             .loginPage("/login")
                             .successHandler(new AuthenticationSuccessHandler())
                             .permitAll();
                 })
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(LogoutConfigurer::permitAll)
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails normalUser = User.builder()
-//                .username("Oleg")
-//                .password("$2a$12$pLlEDlW7J3LJMLMl0Uv8Xu.NO1TYDvrMmIpoDhpHZ3So65XlsR.Vy")
-//                .roles("USER")
-//                .build();
-//        UserDetails adminUser = User.builder()
-//                .username("admin")
-//                .password("$2a$12$4MVGfzHJ2C370at3MTGHdeX6z/kon2X5KbVWZTGfqjWBhj.KnQBuC") // 9876
-//                .roles("ADMIN", "USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(normalUser, adminUser);
-//    }
 
     @Bean
     public UserDetailsService userDetailsService() {
