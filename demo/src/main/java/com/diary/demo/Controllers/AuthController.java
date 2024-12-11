@@ -9,7 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class AuthController {
@@ -33,6 +35,13 @@ public class AuthController {
             throw new UsernameNotFoundException("Invalid credentials");
         }
     }
+
+    @PostMapping("/logout")
+    public ModelAndView logout(@RequestHeader("Authorization") String token) {
+        String jwt = token.substring(7);
+        return  new ModelAndView("redirect:/home");
+    }
+
 }
 
 

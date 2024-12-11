@@ -1,10 +1,7 @@
 package com.diary.demo.Config;
 
-import com.diary.demo.Config.AuthenticationSuccessHandler;
 import com.diary.demo.Service.MyUserDetailService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +11,10 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -42,24 +33,57 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) // CSRF disabled (consider security implications)
                 .authorizeHttpRequests(registry -> {
-                 registry.requestMatchers("/home", "/register", "/authenticate").permitAll();
-                    registry.requestMatchers("/admin/**").hasRole("ADMIN");
-                    registry.requestMatchers("/user/**").hasRole("USER");
-                    registry.anyRequest().authenticated();
+                    registry.requestMatchers("/home", "/register", "/authenticate").permitAll(); // Public endpoints
+                    registry.requestMatchers("/admin/**").hasRole("ADMIN"); // Restricted to ADMIN role
+                    registry.requestMatchers("/user/**").hasRole("USER"); // Restricted to USER role
+                    registry.anyRequest().authenticated(); // All other requests need to be authenticated
                 })
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer
-                            .loginPage("/login")
-                            .successHandler(new AuthenticationSuccessHandler())
-                            .permitAll();
+                            .loginPage("/login") // Custom login page
+                            .successHandler(new AuthenticationSuccessHandler()) // Custom success handler
+                            .permitAll(); // Allow all to access login
                 })
-                .logout(LogoutConfigurer::permitAll)
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> {
+                    logout.logoutUrl("/logout") // Configured signout URL
+                            .logoutSuccessUrl("/home") // Redirect after successful logout
+                            .invalidateHttpSession(true) // Invalidate session
+                            .deleteCookies("JSESSIONID") // Remove session cookies
+                            .permitAll(); // Allow all to access logout
+                })
                 .build();
     }
+
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(registry -> {
+//                 registry.requestMatchers("/home", "/register", "/authenticate").permitAll();
+//                    registry.requestMatchers("/admin/**").hasRole("ADMIN");
+//                    registry.requestMatchers("/user/**").hasRole("USER");
+//                    registry.anyRequest().authenticated();
+//                })
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .formLogin(httpSecurityFormLoginConfigurer -> {
+//                    httpSecurityFormLoginConfigurer
+//                            .loginPage("/login")
+//                            .successHandler(new AuthenticationSuccessHandler())
+//                            .permitAll();
+//                })
+//                .logout(logout -> {
+//                    logout.logoutUrl("/signout") // URL to log out
+//                            .logoutSuccessUrl("/login?logout=true") // Redirect to login after logout
+//                            .invalidateHttpSession(true) // Invalidate the session if you use sessions
+//                            .deleteCookies("JSESSIONID") // Delete session cookies
+//                            .permitAll();
+//                });
+//                .build();
+//    }
 
 
     @Bean
