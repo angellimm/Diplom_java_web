@@ -30,17 +30,4 @@ public class WebController {
         return "custom-login";
     }
 
-
-
-//    @GetMapping("/register")
-//    public String handleRegister() {
-//        return "custom-register";
-//    }
-//@GetMapping("/register")
-//public String showRegistrationForm(Model model) {
-//    model.addAttribute("user", new MyUser());
-//    return "register";
-//}
-
-
 }
