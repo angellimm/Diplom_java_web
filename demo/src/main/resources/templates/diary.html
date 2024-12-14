@@ -16,7 +16,12 @@
     <div th:each="el : ${posts}" class="alert alert-info mt-2" >
         <h3 th:text = "${el.title}"/>
         <p th:text = "${el.anons}"/>
-        <a th:href="'/diary/main'+${el.id}">Детальнее</a>
+        <p th:text = "${el.fullText}"/>
+        <a th:href="'/diary/'+${el.id} + '/edit'" class="btn bnt-warning">Редактировать</a>
+        <form th:action="'/diary/' + ${el.id} + '/remove'" method="post">
+            <button class="btn bnt-warning" type="submit">Удалить</button>
+        </form>
+
 
 
     </div>
@@ -25,6 +30,6 @@
 
 </div>
 
-<footer th:insert="blocks/footer :: footer"></footer>
+<div><footer th:insert="blocks/footer :: footer"></footer></div>
 </body>
 </html>
