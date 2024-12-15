@@ -35,7 +35,7 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable) // CSRF disabled (consider security implications)
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/home", "/register", "/authenticate").permitAll(); // Public endpoints
+                    registry.requestMatchers("/home", "/register", "/authenticate, /article").permitAll(); // Public endpoints
                     registry.requestMatchers("/admin/**").hasRole("ADMIN"); // Restricted to ADMIN role
                     registry.requestMatchers("/user/**").hasRole("USER"); // Restricted to USER role
                     registry.anyRequest().authenticated(); // All other requests need to be authenticated

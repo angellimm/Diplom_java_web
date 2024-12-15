@@ -88,4 +88,13 @@ public class PostController {
         return "redirect:/diary";
     }
 
+    @GetMapping("/article")
+    public String handleArticle() {
+        return "emotion-diary";
+    }
+
+    @GetMapping("/diary/tracker")
+    public String handleTracker() {
+        return "emotion-diary";
+    }
 }
