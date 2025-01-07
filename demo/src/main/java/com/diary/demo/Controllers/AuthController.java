@@ -23,7 +23,6 @@ public class AuthController {
     @Autowired
     private MyUserDetailService myUserDetailService;
 
-
     @PostMapping("/authenticate")
     public String authenticateAndGetToken(@RequestBody LoginForm loginForm) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -35,7 +34,6 @@ public class AuthController {
             throw new UsernameNotFoundException("Invalid credentials");
         }
     }
-
     @PostMapping("/logout")
     public ModelAndView logout(@RequestHeader("Authorization") String token) {
         String jwt = token.substring(7);

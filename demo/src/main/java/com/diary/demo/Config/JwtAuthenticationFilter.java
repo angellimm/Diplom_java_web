@@ -1,6 +1,5 @@
 package com.diary.demo.Config;
 
-
 import com.diary.demo.Service.JwtService;
 import com.diary.demo.Service.MyUserDetailService;
 import jakarta.servlet.FilterChain;
@@ -14,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Configuration

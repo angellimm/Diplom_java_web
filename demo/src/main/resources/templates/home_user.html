@@ -21,8 +21,6 @@ padding: 20px;
 <body>
 <header th:insert="blocks/header :: header"></header>
 
-
-
 <div class="container-intro mt-5 mb-5">
   <h1>Дневник эмоций</h1><br>
   <h3>
@@ -30,7 +28,6 @@ padding: 20px;
   </h3>
   <p><a href="/article">Подробнее о том, что такое "дневник эмоций" и зачем его вести.</a></p>
 </div>
-
 
 <div class="container-add mt-5 mb-5">
   <h2>Поток мыслей</h2>
@@ -44,11 +41,10 @@ padding: 20px;
 <div class="container-emotion mt-5 mb-5">
   <h2>Трекер настроения</h2>
   <p class="text-body-secondary">
-    Отслеживайте своё эмоциональное состояние с помощью трекера-настроения. Отмечайте свое настроение, эмоции и оценивайте Ваш день по 10-бальнной шкале.
+    Отслеживайте своё эмоциональное состояние с помощью трекера-настроения. Отмечайте свое настроение, эмоции и оценивайте.
   </p>
-  <a href="/login" class="btn btn-primary btn-lg">Добавить запись</a>
+  <a href="/diary/tracker" class="btn btn-primary btn-lg">Добавить запись</a>
 </div>
-
 
 <footer th:insert="blocks/footer :: footer"></footer>
 </body>

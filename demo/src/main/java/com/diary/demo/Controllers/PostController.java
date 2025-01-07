@@ -1,18 +1,18 @@
 package com.diary.demo.Controllers;
 
+import com.diary.demo.Models.Tracker;
 import com.diary.demo.Models.Post;
 import com.diary.demo.Repository.PostRepository;
+import com.diary.demo.Repository.TrackerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 @Controller
@@ -20,12 +20,15 @@ public class PostController {
 
     @Autowired
     private PostRepository postRepository;
-
+    @Autowired
+    private TrackerRepository trackerRepository;
 
     @GetMapping("/diary")
     public String handlePost(Model model) {
         Iterable<Post> posts = postRepository.findAll();
          model.addAttribute("posts", posts);
+        Iterable<Tracker> trackers = trackerRepository.findAll();
+        model.addAttribute("trackers", trackers);
         return "diary";
     }
 
@@ -44,21 +47,11 @@ public class PostController {
         return "redirect:/diary";
     }
 
-//    @GetMapping("/diary/main//{id}")
-//    public String postDetails(@PathVariable(value = "id") long id, Model model) {
-//        Optional<Post> post = postRepository.findById(id);
-//        ArrayList<Post> res = new ArrayList<>();
-//        post.ifPresent(res::add);
-//        model.addAttribute("post", res);
-//        return "diary-details";
-//    }
-
         @GetMapping("/diary/{id}/edit")
     public String postEdit(@PathVariable(value = "id") long id, Model model) {
         if (!postRepository.existsById(id)){
             return  "redirect:/diary";
         }
-
         Optional<Post> post = postRepository.findById(id);
         ArrayList<Post> res = new ArrayList<>();
         post.ifPresent(res::add);
@@ -79,7 +72,6 @@ public class PostController {
         postRepository.save(post);
         return "redirect:/diary";
     }
-
     @PostMapping("/diary/{id}/remove")
     public String diaryPostDelete(@PathVariable(value = "id") long id,
                                   Model model){
@@ -87,7 +79,6 @@ public class PostController {
         postRepository.delete(post);
         return "redirect:/diary";
     }
-
     @GetMapping("/article")
     public String handleArticle() {
         return "emotion-diary";
@@ -95,6 +86,24 @@ public class PostController {
 
     @GetMapping("/diary/tracker")
     public String handleTracker() {
-        return "emotion-diary";
+        return "diary-tracker";
+    }
+
+    @PostMapping("/diary/tracker")
+    public String diaryEmotionTracker(@RequestParam("emotion") String emotion,
+                                      @RequestParam("date") String date,
+                                      Model model) {
+        LocalDate localDate = LocalDate.parse(date);
+        Tracker tracker = new Tracker(localDate, emotion);
+        trackerRepository.save(tracker);
+        return "redirect:/diary";
+    }
+
+    @PostMapping("/diary/tracker/{id}/remove")
+    public String diaryTrackerDelete(@PathVariable(value = "id") long id,
+                                  Model model){
+        Tracker tracker = trackerRepository.findById(id).orElseThrow();
+        trackerRepository.delete(tracker);
+        return "redirect:/diary";
     }
 }

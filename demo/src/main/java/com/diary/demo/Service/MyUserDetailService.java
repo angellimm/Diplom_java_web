@@ -1,6 +1,6 @@
 package com.diary.demo.Service;
 
-import com.diary.demo.Service.MyUserDetailService;
+
 import com.diary.demo.Models.MyUser;
 import com.diary.demo.Repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service

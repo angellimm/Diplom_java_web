@@ -1,11 +1,7 @@
 package com.diary.demo.Controllers;
 
-import com.diary.demo.Models.MyUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-
 
 @Controller
 public class WebController {
@@ -14,11 +10,6 @@ public class WebController {
     public String handleWelcome() {
         return "home";
     }
-
-//    @GetMapping("/admin/home")
-//    public String handleAdminHome() {
-//        return "home_admin";
-//    }
 
     @GetMapping("/user/home")
     public String handleUserHome() {
@@ -29,6 +20,4 @@ public class WebController {
     public String handleLogin() {
         return "custom-login";
     }
-
-
 }

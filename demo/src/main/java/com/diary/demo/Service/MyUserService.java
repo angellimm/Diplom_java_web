@@ -15,18 +15,6 @@ public class MyUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    public boolean saveUser(MyUser user) {
-//
-//        MyUser userFromDB = userRepository.findByUsername(user.getUsername());
-//        if (userFromDB != null) {
-//            return false;
-//        }
-//        user.setRole("ROLE_USER");
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        userRepository.save(user);
-//        return true;
-//    }
-
     public void registerUser(MyUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
